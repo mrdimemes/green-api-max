@@ -18,10 +18,8 @@ const MessageInput = ({ send, disabled }: Props) => {
       />
       <button
         onClick={() => {
-          setMessage((previos) => {
-            send(previos);
-            return "";
-          });
+          send(message);
+          setMessage("");
         }}
         disabled={disabled || message === ""}
       >

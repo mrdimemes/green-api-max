@@ -1,5 +1,4 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { useState } from "react";
 import api from "./api";
 import Message from "./components/Message";
@@ -75,9 +74,9 @@ const App = () => {
   const queryClient = useQueryClient();
 
   const fetchMessage = async () => {
-    try {
-      const response = await api.get<FetchMessagesResponse>(
-        `waInstance${idInstance}/receiveNotification/${apiTokenInstance}`);
+    const response = await api.get<FetchMessagesResponse | undefined>(
+      `waInstance${idInstance}/receiveNotification/${apiTokenInstance}`);
+    if (response.data) {
       const { receiptId, body } = response.data;
       const deleteResponse = await api.delete<DeleteNotificationResponse>(
         `waInstance${idInstance}/deleteNotification/${apiTokenInstance}/${receiptId}`);
@@ -90,11 +89,6 @@ const App = () => {
         sender: body.senderData.sender,
         text: body.messageData.textMessageData.textMessage,
       };
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        alert(error.response?.data ?? "Ошибка запроса.");
-      }
-      throw error;
     };
   };
 
@@ -149,7 +143,7 @@ const App = () => {
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
     enabled: selectedChatId !== null,
-    refetchInterval: 10000,
+    refetchInterval: 5000,
   });
 
   const mutation = useMutation({
