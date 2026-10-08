@@ -2,9 +2,10 @@ import { useState } from "react";
 
 type Props = {
   send: (message: string) => void;
+  disabled: boolean;
 };
 
-const MessageInput = ({ send }: Props) => {
+const MessageInput = ({ send, disabled }: Props) => {
   const [message, setMessage] = useState("");
 
   return (
@@ -16,8 +17,13 @@ const MessageInput = ({ send }: Props) => {
         placeholder="Введите сообщение..."
       />
       <button
-        onClick={() => send(message)}
-        disabled={message === ""}
+        onClick={() => {
+          setMessage((previos) => {
+            send(previos);
+            return "";
+          });
+        }}
+        disabled={disabled || message === ""}
       >
         Отправить
       </button>
