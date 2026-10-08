@@ -1,0 +1,86 @@
+.Auth
+  background-color: #0d0d0d
+  height: 100vh
+  color: white
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+
+  & label
+    margin-bottom: 8px
+  & input
+    margin-bottom: 16px
+
+.App
+  background-color: #0d0d0d
+  height: 100vh
+  color: white
+  display: grid
+  grid-template-areas: "side header" "side content"
+  grid-template-columns: 400px 1fr
+  grid-template-rows: 65px 1fr
+  font-family: "Roboto", sans-serif
+
+.chats
+  background-color: #0f0f12
+  border-right: 1px solid #25262d
+  box-sizing: border-box
+  grid-area: side
+  padding: 16px
+
+  & header
+    font-size: 24px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-bottom: 24px
+
+  & .contact
+    background-color: #1a1a20
+    padding: 8px
+    border-radius: 8px
+    margin-bottom: 8px
+    cursor: pointer
+    &.selected
+      background-color: #383846
+
+.header
+  grid-area: header
+  background-color: #0f0f12
+  height: 65px
+  padding: 16px
+  box-sizing: border-box
+  border-bottom: 1px solid #25262d
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+  & .session
+    display: flex
+    align-items: center
+    gap: 16px
+
+  & .session div
+    display: flex
+    align-items: center
+    gap: 16px
+
+.currentChat
+  grid-area: content
+  padding: 16px
+  display: flex
+  flex-direction: column
+  justify-content: flex-end
+  gap: 24px
+
+  & > div:last-child
+    display: flex
+    justify-content: center
+    align-items: center
+    gap: 8px
+
+  & .messages
+    display: flex
+    flex-direction: column
+    gap: 8px

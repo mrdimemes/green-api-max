@@ -3,6 +3,8 @@ import { useState } from "react";
 import api from "./api";
 import Message from "./components/Message";
 import MessageInput from "./components/MessageInput";
+import styles from "./App.module.sass";
+import clsx from "clsx";
 
 type IncomingTextMessageBody = {
   typeWebhook: "incomingMessageReceived";
@@ -118,6 +120,7 @@ const App = () => {
     const { exist, chatId } = response.data;
     if (exist) {
       setChats((previous) => [{ chatId, chatName: String(phoneNumber) }, ...previous]);
+      setSelectedChatId(chatId);
     } else {
       alert("Пользователь не зарегистрирован в Макс.");
     };
@@ -158,7 +161,7 @@ const App = () => {
 
   if (!authed) {
     return (
-      <div>
+      <div className={styles.Auth}>
         <label htmlFor="idInstanceInput">idInstance</label>
         <input
           id="idInstanceInput"
@@ -179,9 +182,10 @@ const App = () => {
   };
 
   return (
-    <div>
-      <aside>
-        <h1>Чаты
+    <div className={styles.App}>
+      <aside className={styles.chats}>
+        <header>
+          <span>Чаты</span>
           <button onClick={() => {
             const input = prompt("Введите номер телефона: ");
             if (input === null) return;
@@ -196,12 +200,16 @@ const App = () => {
               alert("Некорректный ввод.");
             };
           }}>Добавить</button>
-        </h1>
+        </header>
         <div>
           {
             chats.map((chat) => (
               <div
                 key={chat.chatId}
+                className={clsx(
+                  styles.contact,
+                  chat.chatId === selectedChatId && styles.selected,
+                )}
                 onClick={() => setSelectedChatId(chat.chatId)}
               >
                 {chat.chatName}
@@ -210,19 +218,30 @@ const App = () => {
           }
         </div>
       </aside>
-      <header>
-        Чат <b>{selectedChatId ?? "не выбран"}</b>; idInstance = {idInstance}; apiTokenInstance = {apiTokenInstance}.
-        <button onClick={() => setAuthed(false)}>Изменить</button>
-      </header>
-      <div>
+      <header className={styles.header}>
         <div>
-          {messages.map((message) => (
-            <Message
-              key={message.id}
-              text={message.text}
-              sendedByUser={message.sender === "-1"}
-            />
-          ))}
+          Чат <b>{selectedChatId ?? "не выбран"}</b>
+        </div>
+        <div className={styles.session}>
+          <div>
+            idInstance = {idInstance}
+          </div>
+          <div>
+            apiTokenInstance = {"***" + apiTokenInstance.slice(-3)}
+          </div>
+          <button onClick={() => setAuthed(false)}>Изменить</button>
+        </div>
+      </header>
+      <div className={styles.currentChat}>
+        <div className={styles.messages}>
+          {
+            messages.map((message) => (
+              <Message
+                key={message.id}
+                text={message.text}
+                sendedByUser={message.sender === "-1"}
+              />
+            ))}
         </div>
         <MessageInput
           send={(message: string) => {
